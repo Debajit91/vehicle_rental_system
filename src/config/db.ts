@@ -39,7 +39,7 @@ const initDB = async () => {
 
             registration_number TEXT UNIQUE NOT NULL,
 
-            daily_rent_price NUMERIC NOT NULL,
+            daily_rent_price INT NOT NULL,
             CHECK (daily_rent_price > 0),
 
             availability_status TEXT NOT NULL,
@@ -62,7 +62,7 @@ const initDB = async () => {
             rent_end_date DATE NOT NULL,
             CHECK (rent_end_date > rent_start_date),
 
-            total_price NUMERIC NOT NULL,
+            total_price INT NOT NULL,
             CHECK (total_price > 0),
 
             status TEXT NOT NULL,
