@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import initDB from './config/db';
+import { vehicleRoutes } from './modules/vehicles/vehicles.routes';
 
 
 
@@ -13,6 +14,9 @@ app.use(express.json());
 app.get('/', (req:Request, res:Response) =>{
     res.send('Hello This is Vehicle Rental System App!')
 })
+
+// vehicle Route
+app.use('/api/v1/vehicles', vehicleRoutes);
 
 app.use((req:Request, res:Response) =>{
   res.status(404).json({
