@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import initDB from './config/db';
 import { vehicleRoutes } from './modules/vehicles/vehicles.routes';
 import { authRoutes } from './modules/auth/auth.routes';
+import { userRoutes } from './modules/users/users.routes';
 
 
 
@@ -21,7 +22,10 @@ app.get('/', (req:Request, res:Response) =>{
 app.use('/api/v1/vehicles', vehicleRoutes);
 
 // auth Route
-app.use('/api/v1/auth/', authRoutes);
+app.use('/api/v1/auth', authRoutes);
+
+// user Route
+app.use('/api/v1/users', userRoutes)
 
 // Not found
 app.use((req:Request, res:Response) =>{
