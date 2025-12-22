@@ -71,9 +71,9 @@ const getSingleVehicle = async(req: Request, res: Response)=>{
 }
 
 const updateVehicle = async(req: Request, res: Response)=>{
-    const {vehicle_name, daily_rent_price} = req.body;
+    const {vehicle_name, daily_rent_price, availability_status} = req.body;
     try {
-        const result = await vehicleServices.updateVehicle(vehicle_name, daily_rent_price, req.params.vehicleId as string)
+        const result = await vehicleServices.updateVehicle(vehicle_name, daily_rent_price, availability_status, req.params.vehicleId as string)
 
         if(result.rows.length > 0){
             res.status(200).json({
@@ -96,10 +96,27 @@ const updateVehicle = async(req: Request, res: Response)=>{
     }
 }
 
+const deleteVehicle = async(req: Request, res: Response) =>{
+    try {
+        const result = await vehicleServices.deleteVehicle(req.params.vehicleId as string);
+
+        res.status(200).json({
+            success: true,
+            message: "Vehicle deleted successfully"
+        })
+    } catch (err:any) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
+
 
 export const vehicleController = {
     createVehicle,
     getVehicles,
     getSingleVehicle,
-    updateVehicle
+    updateVehicle,
+    deleteVehicle
 }
