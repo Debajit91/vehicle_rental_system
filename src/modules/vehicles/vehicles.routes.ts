@@ -1,5 +1,4 @@
-import { Request, Response, Router } from "express";
-import { pool } from "../../config/db";
+import { Router } from "express";
 import { vehicleController } from "./vehicles.controller";
 
 const router = Router();
