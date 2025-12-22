@@ -70,9 +70,36 @@ const getSingleVehicle = async(req: Request, res: Response)=>{
     }
 }
 
+const updateVehicle = async(req: Request, res: Response)=>{
+    const {vehicle_name, daily_rent_price} = req.body;
+    try {
+        const result = await vehicleServices.updateVehicle(vehicle_name, daily_rent_price, req.params.vehicleId as string)
+
+        if(result.rows.length > 0){
+            res.status(200).json({
+            success: true,
+            message: "Vehicle updated successfully",
+            data: result.rows
+        })
+        } else{
+            res.status(404).json({
+                success: false,
+                message: "No vehicles found",
+                data: result.rows
+            })
+        }
+    } catch (error:any) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
 
 export const vehicleController = {
     createVehicle,
     getVehicles,
-    getSingleVehicle
+    getSingleVehicle,
+    updateVehicle
 }

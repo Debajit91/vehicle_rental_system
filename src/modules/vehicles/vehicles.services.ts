@@ -20,8 +20,16 @@ const getSingleVehicle = async(vehicleId:string)=>{
     return result;
 }
 
+const updateVehicle = async(vehicle_name:string, daily_rent_price:number, vehicleId:string)=>{
+
+    const result = await pool.query(`UPDATE vehicles SET vehicle_name=$1, daily_rent_price=$2 WHERE id=$3 RETURNING *`, [vehicle_name, daily_rent_price, vehicleId]);
+
+    return result;
+}
+
 export const vehicleServices = {
     createVehicle,
     getVehicles,
-    getSingleVehicle
+    getSingleVehicle,
+    updateVehicle
 }
