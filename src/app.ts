@@ -18,6 +18,7 @@ app.get('/', (req:Request, res:Response) =>{
 // vehicle Route
 app.use('/api/v1/vehicles', vehicleRoutes);
 
+// Not found
 app.use((req:Request, res:Response) =>{
   res.status(404).json({
     success: false,
