@@ -25,8 +25,8 @@ const initDB = async () => {
         role VARCHAR(20) NOT NULL,
         CHECK (role IN ('admin', 'customer')),
 
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+        created_at TIMESTAMP DEFAULT NOW() NOT NULL,
+        updated_at TIMESTAMP DEFAULT NOW() NOT NULL
         )`);
 
   await pool.query(`
