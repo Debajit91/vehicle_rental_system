@@ -3,6 +3,7 @@ import initDB from './config/db';
 import { vehicleRoutes } from './modules/vehicles/vehicles.routes';
 import { authRoutes } from './modules/auth/auth.routes';
 import { userRoutes } from './modules/users/users.routes';
+import { bookingRoutes } from './modules/bookings/bookings.routes';
 
 
 
@@ -25,7 +26,10 @@ app.use('/api/v1/vehicles', vehicleRoutes);
 app.use('/api/v1/auth', authRoutes);
 
 // user Route
-app.use('/api/v1/users', userRoutes)
+app.use('/api/v1/users', userRoutes);
+
+// booking Route
+app.use('/api/v1/bookings', bookingRoutes);
 
 // Not found
 app.use((req:Request, res:Response) =>{
