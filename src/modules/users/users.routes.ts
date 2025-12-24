@@ -1,15 +1,16 @@
 import { Router } from "express";
 import { userControllers } from "./users.controller";
+import auth from "../../middleware/auth";
 
 const router = Router();
 
 // get all users
-router.get('/', userControllers.getUsers)
+router.get('/', auth("admin"), userControllers.getUsers)
 
 // update user
-router.put('/:userId', userControllers.updateUser)
+router.put('/:userId', auth("admin", "customer"), userControllers.updateUser)
 
 // delete user
-router.delete('/:userId', userControllers.deleteUser)
+router.delete('/:userId', auth("admin"), userControllers.deleteUser)
 
 export const userRoutes = router;

@@ -52,9 +52,9 @@ const loginUser = async(email:string, password:string)=>{
         expiresIn: '10d',
     })
 
-    console.log(token);
+    const {password: _password, ...userWithoutPassword} = user;
 
-    return {token, user};
+    return {token, user: userWithoutPassword};
 
 }
 
