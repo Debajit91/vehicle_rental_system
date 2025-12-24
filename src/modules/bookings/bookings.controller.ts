@@ -88,7 +88,7 @@ const updateBooking = async (req: any, res: Response) => {
           });
         }
 
-        result = await bookingServices.updateBookingAsAdmin(status, bookingId);
+        result = await bookingServices.updateBookingAsAdmin( bookingId);
 
         if (!result.rows.length) {
           return res.status(404).json({

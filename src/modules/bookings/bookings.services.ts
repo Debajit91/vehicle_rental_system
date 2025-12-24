@@ -63,7 +63,7 @@ const getBooking = async()=>{
     return result;
 }
 
-const updateBookingAsAdmin = async(status:string, bookingId:number): Promise<QueryResult<any>>=>{
+const updateBookingAsAdmin = async(bookingId:number): Promise<QueryResult<any>>=>{
   const result = await pool.query(`WITH updated_booking AS (
         UPDATE bookings
         SET status = 'returned', updated_at = NOW()
