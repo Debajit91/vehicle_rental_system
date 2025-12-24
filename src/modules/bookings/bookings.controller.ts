@@ -49,12 +49,15 @@ const getBooking = async(req: Request, res: Response)=>{
 }
 
 const updateBooking = async(req:Request, res: Response)=>{
+  const {status} = req.body;
+  const bookingId = Number(req.params.bookingId);
   try {
-    const result = await bookingServices.updateBooking(req.body);
+    const result = await bookingServices.updateBooking(status, bookingId);
 
     res.status(200).json({
       success: true,
-      message: "Booking cancelled successfully"
+      message: "Booking cancelled successfully",
+      data: result.rows[0]
     })
   } catch (error:any) {
     res.status(500).json({
