@@ -42,7 +42,7 @@ const initDB = async () => {
             daily_rent_price INT NOT NULL,
             CHECK (daily_rent_price > 0),
 
-            availability_status TEXT NOT NULL,
+            availability_status TEXT,
             CHECK(availability_status IN ('available', 'booked')),
 
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
