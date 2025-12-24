@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { bookingServices } from "./bookings.services";
 import { QueryResult } from "pg";
+import { JwtPayload } from "jsonwebtoken";
 
 const createBooking = async (req: Request, res: Response) => {
   try {
@@ -27,7 +28,8 @@ const createBooking = async (req: Request, res: Response) => {
 
 const getBooking = async (req: Request, res: Response) => {
   try {
-    const result = await bookingServices.getBooking();
+    const user = req.user as JwtPayload;
+    const result = await bookingServices.getBooking(user.id as string, user.role as string);
 
     if (!result.rows.length) {
       res.status(404).json({

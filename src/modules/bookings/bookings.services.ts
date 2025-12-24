@@ -57,14 +57,20 @@ const createBooking = async (payload: createBookingPayload) => {
   return result;
 };
 
-const getBooking = async()=>{
+const getBooking = async (userId: string, userRole: string) => {
+  if (userRole === "admin") {
     const result = await pool.query(`SELECT * FROM bookings`);
-
     return result;
-}
+  }
+  const result = await pool.query(`SELECT * FROM bookings WHERE id=$1`, [userId]);
+  return result;
+};
 
-const updateBookingAsAdmin = async(bookingId:number): Promise<QueryResult<any>>=>{
-  const result = await pool.query(`WITH updated_booking AS (
+const updateBookingAsAdmin = async (
+  bookingId: number
+): Promise<QueryResult<any>> => {
+  const result = await pool.query(
+    `WITH updated_booking AS (
         UPDATE bookings
         SET status = 'returned', updated_at = NOW()
         WHERE id = $1
@@ -89,15 +95,19 @@ const updateBookingAsAdmin = async(bookingId:number): Promise<QueryResult<any>>=
         b.*,
         json_build_object('availability_status', uv.availability_status) AS vehicle
       FROM updated_booking b
-      JOIN updated_vehicle uv ON true;`, [bookingId]);
-
-
+      JOIN updated_vehicle uv ON true;`,
+    [bookingId]
+  );
 
   return result;
-}
+};
 
-const cancelBookingAsCustomer = async(customerId:number, bookingId:number): Promise<QueryResult<any>>=>{
-  const result = await pool.query(`UPDATE bookings
+const cancelBookingAsCustomer = async (
+  customerId: number,
+  bookingId: number
+): Promise<QueryResult<any>> => {
+  const result = await pool.query(
+    `UPDATE bookings
       SET status = 'cancelled', updated_at = NOW()
       WHERE id = $1
         AND customer_id = $2
@@ -109,7 +119,8 @@ const cancelBookingAsCustomer = async(customerId:number, bookingId:number): Prom
         rent_start_date::text AS rent_start_date,
         rent_end_date::text  AS rent_end_date,
         total_price,
-        status;`, [bookingId, customerId]
+        status;`,
+    [bookingId, customerId]
   );
 
   return result;
@@ -119,5 +130,5 @@ export const bookingServices = {
   createBooking,
   getBooking,
   updateBookingAsAdmin,
-  cancelBookingAsCustomer
+  cancelBookingAsCustomer,
 };
