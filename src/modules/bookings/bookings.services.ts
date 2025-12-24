@@ -1,3 +1,4 @@
+import { QueryResult } from "pg";
 import { pool } from "../../config/db";
 
 type createBookingPayload = {
@@ -62,16 +63,61 @@ const getBooking = async()=>{
     return result;
 }
 
-const updateBooking = async(status:string, id:number)=>{
-  const result = await pool.query(`UPDATE bookings SET status=$1 WHERE id=$2 RETURNING *`, [status, id]);
+const updateBookingAsAdmin = async(status:string, bookingId:number): Promise<QueryResult<any>>=>{
+  const result = await pool.query(`WITH updated_booking AS (
+        UPDATE bookings
+        SET status = 'returned', updated_at = NOW()
+        WHERE id = $1
+          AND status IN ('active')
+        RETURNING
+          id,
+          customer_id,
+          vehicle_id,
+          rent_start_date::text AS rent_start_date,
+          rent_end_date::text  AS rent_end_date,
+          total_price,
+          status
+      ),
+      updated_vehicle AS (
+        UPDATE vehicles v
+        SET availability_status = 'available', updated_at = NOW()
+        FROM updated_booking b
+        WHERE v.id = b.vehicle_id
+        RETURNING v.availability_status
+      )
+      SELECT
+        b.*,
+        json_build_object('availability_status', uv.availability_status) AS vehicle
+      FROM updated_booking b
+      JOIN updated_vehicle uv ON true;`, [bookingId]);
 
 
 
   return result;
 }
 
+const cancelBookingAsCustomer = async(customerId:number, bookingId:number): Promise<QueryResult<any>>=>{
+  const result = await pool.query(`UPDATE bookings
+      SET status = 'cancelled', updated_at = NOW()
+      WHERE id = $1
+        AND customer_id = $2
+        AND status IN ('active', 'pending')
+      RETURNING
+        id,
+        customer_id,
+        vehicle_id,
+        rent_start_date::text AS rent_start_date,
+        rent_end_date::text  AS rent_end_date,
+        total_price,
+        status;`, [bookingId, customerId]
+  );
+
+  return result;
+};
+
 export const bookingServices = {
   createBooking,
   getBooking,
-  updateBooking
+  updateBookingAsAdmin,
+  cancelBookingAsCustomer
 };
